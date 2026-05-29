@@ -7,338 +7,381 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
 <style>
-  :root {
-    --ink:     #111111;
-    --cream:   #F7F4EF;
-    --warm:    #EDE9E0;
-    --gold:    #B89A5A;
-    --gold-lt: #D4B97A;
-    --rule:    #C8BFA8;
-    --text:    #2D2D2D;
-    --muted:   #6E6860;
-    --white:   #FFFFFF;
-  }
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  html { scroll-behavior: smooth; }
+:root {
+  --ink:#111111;--cream:#F7F4EF;--warm:#EDE9E0;--gold:#B89A5A;
+  --gold-lt:#D4B97A;--rule:#C8BFA8;--text:#2D2D2D;--muted:#6E6860;--white:#FFFFFF;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
 
-  body {
-    background: var(--cream);
-    color: var(--text);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 15px;
-    line-height: 1.65;
-    overflow-x: hidden;
-  }
+/* ── PROGRESS BAR ── */
+#progress-bar{
+  position:fixed;top:0;left:0;height:3px;width:0%;
+  background:linear-gradient(90deg,var(--gold),var(--gold-lt));
+  z-index:999;transition:width 0.1s linear;
+}
 
-  /* ── NAV ── */
-  nav {
-    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-    background: rgba(247,244,239,0.96);
-    backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--rule);
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 0 4vw;
-    height: 60px;
-  }
-  .nav-logo {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.2rem; font-weight: 500; letter-spacing: 0.05em;
-    color: var(--ink);
-  }
-  .nav-links { display: flex; gap: 2rem; list-style: none; }
-  .nav-links a {
-    font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase;
-    color: var(--muted); text-decoration: none; transition: color 0.2s;
-  }
-  .nav-links a:hover { color: var(--gold); }
+/* ── CURSOR ── */
+.cursor{
+  position:fixed;width:10px;height:10px;border-radius:50%;
+  background:var(--gold);pointer-events:none;z-index:9999;
+  transform:translate(-50%,-50%);transition:transform 0.08s,opacity 0.3s;
+  mix-blend-mode:multiply;
+}
+.cursor-ring{
+  position:fixed;width:36px;height:36px;border-radius:50%;
+  border:1px solid var(--gold);pointer-events:none;z-index:9998;
+  transform:translate(-50%,-50%);
+  transition:transform 0.18s cubic-bezier(.25,.46,.45,.94),width 0.25s,height 0.25s,opacity 0.3s;
+  opacity:0.5;
+}
+body:hover .cursor{opacity:1;}
 
-  /* ── HERO ── */
-  .hero {
-    min-height: 100vh;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    padding-top: 60px;
-  }
-  .hero-left {
-    display: flex; flex-direction: column; justify-content: center;
-    padding: 6vw 5vw 6vw 8vw;
-  }
-  .eyebrow {
-    font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase;
-    color: var(--gold); margin-bottom: 1.5rem;
-  }
-  h1 {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(3.2rem, 5vw, 5.5rem);
-    font-weight: 300; line-height: 1.05;
-    color: var(--ink); margin-bottom: 2rem;
-  }
-  h1 em { font-style: italic; color: var(--gold); }
-  .hero-body {
-    font-size: 1rem; line-height: 1.8; color: var(--muted);
-    max-width: 36ch; margin-bottom: 2.5rem;
-  }
-  .hero-stats {
-    display: flex; gap: 3rem; margin-bottom: 3rem;
-  }
-  .stat-val {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 2.6rem; font-weight: 400; color: var(--ink); line-height: 1;
-  }
-  .stat-label {
-    font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase;
-    color: var(--muted); margin-top: 0.25rem;
-  }
-  .hero-cta {
-    display: inline-flex; align-items: center; gap: 0.75rem;
-    background: var(--gold); color: var(--white);
-    padding: 0.85rem 2rem; text-decoration: none;
-    font-size: 0.78rem; letter-spacing: 0.12em; text-transform: uppercase;
-    transition: background 0.2s;
-  }
-  .hero-cta:hover { background: var(--ink); }
-  .hero-cta svg { width: 14px; height: 14px; }
+body{
+  background:var(--cream);color:var(--text);
+  font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.65;
+  overflow-x:hidden;cursor:none;
+}
 
-  .hero-right {
-    position: relative; overflow: hidden;
-    background: var(--ink);
-  }
-  .hero-right img {
-    width: 100%; height: 100%; object-fit: cover;
-    opacity: 0.85;
-    transition: opacity 0.5s;
-  }
-  .hero-right:hover img { opacity: 1; }
-  .hero-caption {
-    position: absolute; bottom: 2rem; left: 2rem;
-    font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase;
-    color: rgba(255,255,255,0.6);
-  }
+/* ── NOISE GRAIN OVERLAY ── */
+body::before{
+  content:'';position:fixed;inset:0;z-index:1000;pointer-events:none;
+  opacity:0.03;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-size:200px 200px;
+}
 
-  /* ── SECTION WRAPPER ── */
-  section { padding: 7rem 8vw; }
-  section:nth-child(even) { background: var(--warm); }
+/* ── NAV ── */
+nav{
+  position:fixed;top:3px;left:0;right:0;z-index:500;
+  background:rgba(247,244,239,0.92);backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--rule);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 4vw;height:60px;
+  transition:box-shadow 0.3s;
+}
+nav.scrolled{box-shadow:0 4px 30px rgba(0,0,0,0.07);}
+.nav-logo{
+  font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:500;
+  letter-spacing:0.05em;color:var(--ink);
+}
+.nav-links{display:flex;gap:2rem;list-style:none;}
+.nav-links a{
+  font-size:0.78rem;letter-spacing:0.1em;text-transform:uppercase;
+  color:var(--muted);text-decoration:none;position:relative;padding-bottom:2px;
+}
+.nav-links a::after{
+  content:'';position:absolute;bottom:0;left:0;width:0;height:1px;
+  background:var(--gold);transition:width 0.3s;
+}
+.nav-links a:hover{color:var(--gold);}
+.nav-links a:hover::after{width:100%;}
 
-  .section-label {
-    font-size: 0.68rem; letter-spacing: 0.22em; text-transform: uppercase;
-    color: var(--gold); margin-bottom: 0.75rem;
-  }
-  h2 {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(2.2rem, 3.5vw, 3.5rem);
-    font-weight: 300; color: var(--ink); margin-bottom: 3rem;
-    line-height: 1.1;
-  }
-  h2 em { font-style: italic; color: var(--gold); }
+/* ── HERO ── */
+.hero{
+  min-height:100vh;display:grid;grid-template-columns:1fr 1fr;padding-top:60px;
+  overflow:hidden;
+}
+.hero-left{
+  display:flex;flex-direction:column;justify-content:center;
+  padding:6vw 5vw 6vw 8vw;position:relative;z-index:2;
+}
 
-  /* ── ABOUT ── */
-  .about-grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 5rem; align-items: start; }
-  .about-text p { color: var(--text); line-height: 1.85; margin-bottom: 1.25rem; }
-  .about-text p:first-child { font-size: 1.1rem; }
+/* Hero stagger animations */
+.hero-left .eyebrow{opacity:0;transform:translateY(20px);animation:fadeUp 0.7s 0.2s forwards;}
+.hero-left h1{opacity:0;transform:translateY(30px);animation:fadeUp 0.8s 0.4s forwards;}
+.hero-left .hero-body{opacity:0;transform:translateY(20px);animation:fadeUp 0.7s 0.65s forwards;}
+.hero-left .hero-stats{opacity:0;transform:translateY(20px);animation:fadeUp 0.7s 0.85s forwards;}
+.hero-left .hero-cta{opacity:0;transform:translateY(16px);animation:fadeUp 0.6s 1.05s forwards;}
 
-  .cred-list { list-style: none; }
-  .cred-list li {
-    display: flex; align-items: flex-start; gap: 1rem;
-    padding: 1rem 0; border-bottom: 1px solid var(--rule);
-    font-size: 0.9rem;
-  }
-  .cred-list li:last-child { border-bottom: none; }
-  .cred-icon {
-    width: 28px; height: 28px; flex-shrink: 0;
-    background: var(--gold); color: var(--white);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 0.65rem; font-weight: 500; letter-spacing: 0.05em;
-    margin-top: 0.1rem;
-  }
-  .cred-body strong { display: block; font-size: 0.8rem; letter-spacing: 0.05em; color: var(--ink); }
-  .cred-body span { color: var(--muted); font-size: 0.8rem; }
+@keyframes fadeUp{to{opacity:1;transform:none;}}
 
-  /* ── EXPERIENCE ── */
-  .exp-timeline { position: relative; }
-  .exp-timeline::before {
-    content: '';
-    position: absolute; left: 0; top: 0; bottom: 0;
-    width: 1px; background: var(--rule);
-  }
-  .exp-item {
-    padding-left: 2.5rem; position: relative; margin-bottom: 3.5rem;
-  }
-  .exp-item::before {
-    content: '';
-    position: absolute; left: -4px; top: 0.45rem;
-    width: 9px; height: 9px; border-radius: 50%;
-    background: var(--gold); border: 2px solid var(--cream);
-  }
-  .exp-date {
-    font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase;
-    color: var(--gold); margin-bottom: 0.35rem;
-  }
-  .exp-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.5rem; font-weight: 400; color: var(--ink);
-    margin-bottom: 0.15rem;
-  }
-  .exp-company {
-    font-size: 0.82rem; color: var(--muted); margin-bottom: 1rem;
-  }
-  .exp-bullets { list-style: none; }
-  .exp-bullets li {
-    position: relative; padding-left: 1.4rem;
-    color: var(--text); font-size: 0.9rem; line-height: 1.75;
-    margin-bottom: 0.5rem;
-  }
-  .exp-bullets li::before {
-    content: '—';
-    position: absolute; left: 0; color: var(--gold);
-    font-size: 0.75rem; top: 0.05rem;
-  }
+.eyebrow{
+  font-size:0.72rem;letter-spacing:0.2em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:1.5rem;
+}
+h1{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(3.2rem,5vw,5.5rem);font-weight:300;line-height:1.05;
+  color:var(--ink);margin-bottom:2rem;
+}
+h1 em{font-style:italic;color:var(--gold);}
+.hero-body{font-size:1rem;line-height:1.8;color:var(--muted);max-width:36ch;margin-bottom:2.5rem;}
 
-  /* ── SKILLS ── */
-  .skills-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; }
-  .skill-card {
-    background: var(--white);
-    padding: 2rem;
-    border-top: 2px solid var(--gold);
-  }
-  .skill-card h3 {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.25rem; font-weight: 400;
-    color: var(--ink); margin-bottom: 1rem;
-  }
-  .skill-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
-  .tag {
-    font-size: 0.72rem; letter-spacing: 0.08em;
-    padding: 0.3rem 0.75rem;
-    border: 1px solid var(--rule);
-    color: var(--muted); text-transform: uppercase;
-  }
+/* Animated counter stats */
+.hero-stats{display:flex;gap:3rem;margin-bottom:3rem;}
+.stat-val{
+  font-family:'Cormorant Garamond',serif;font-size:2.6rem;font-weight:400;
+  color:var(--ink);line-height:1;
+}
+.stat-label{font-size:0.7rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-top:0.25rem;}
 
-  /* ── PORTFOLIO ── */
-  .portfolio-filter {
-    display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 3rem;
-  }
-  .filter-btn {
-    font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase;
-    padding: 0.5rem 1.2rem; border: 1px solid var(--rule);
-    background: transparent; color: var(--muted);
-    cursor: pointer; transition: all 0.2s;
-  }
-  .filter-btn:hover, .filter-btn.active {
-    background: var(--gold); border-color: var(--gold);
-    color: var(--white);
-  }
+.hero-cta{
+  display:inline-flex;align-items:center;gap:0.75rem;
+  background:var(--gold);color:var(--white);padding:0.85rem 2rem;
+  text-decoration:none;font-size:0.78rem;letter-spacing:0.12em;text-transform:uppercase;
+  transition:background 0.3s,transform 0.2s,box-shadow 0.3s;
+  position:relative;overflow:hidden;
+}
+.hero-cta::before{
+  content:'';position:absolute;inset:0;background:rgba(255,255,255,0.1);
+  transform:translateX(-110%) skewX(-15deg);transition:transform 0.5s;
+}
+.hero-cta:hover::before{transform:translateX(110%) skewX(-15deg);}
+.hero-cta:hover{background:var(--ink);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,0.15);}
+.hero-cta svg{width:14px;height:14px;}
 
-  .portfolio-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1.5rem;
-  }
-  .project-card {
-    position: relative; overflow: hidden;
-    background: var(--ink);
-    cursor: pointer;
-    transition: transform 0.3s;
-  }
-  .project-card:hover { transform: translateY(-4px); }
-  .project-card img {
-    width: 100%; aspect-ratio: 4/3; object-fit: cover;
-    opacity: 0.75; display: block;
-    transition: opacity 0.4s, transform 0.5s;
-  }
-  .project-card:hover img { opacity: 0.5; transform: scale(1.04); }
-  .project-overlay {
-    position: absolute; bottom: 0; left: 0; right: 0;
-    background: linear-gradient(transparent, rgba(0,0,0,0.85));
-    padding: 3rem 1.5rem 1.5rem;
-    transform: translateY(1.5rem); opacity: 0;
-    transition: all 0.3s;
-  }
-  .project-card:hover .project-overlay { transform: translateY(0); opacity: 1; }
-  .project-tag {
-    font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase;
-    color: var(--gold-lt); margin-bottom: 0.35rem;
-  }
-  .project-name {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.2rem; font-weight: 400; color: var(--white);
-    margin-bottom: 0.25rem;
-  }
-  .project-loc {
-    font-size: 0.75rem; color: rgba(255,255,255,0.6);
-  }
-  .project-always {
-    position: absolute; top: 1rem; left: 1rem;
-    background: var(--gold);
-    font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase;
-    color: var(--white); padding: 0.2rem 0.6rem;
-  }
+/* Parallax hero image */
+.hero-right{position:relative;overflow:hidden;background:var(--ink);}
+.hero-right img{
+  width:100%;height:110%;object-fit:cover;opacity:0;
+  transform:scale(1.08);
+  animation:heroImgIn 1.2s 0.3s forwards;
+  will-change:transform;
+}
+@keyframes heroImgIn{to{opacity:0.85;transform:scale(1);}}
+.hero-right:hover img{opacity:1;}
+.hero-caption{
+  position:absolute;bottom:2rem;left:2rem;
+  font-size:0.7rem;letter-spacing:0.12em;text-transform:uppercase;
+  color:rgba(255,255,255,0.6);
+  opacity:0;animation:fadeUp 0.6s 1.2s forwards;
+}
 
-  /* ── CONTACT ── */
-  .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: start; }
-  .contact-intro {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.6rem; font-weight: 300; line-height: 1.5;
-    color: var(--ink); margin-bottom: 2rem;
-  }
-  .contact-items { list-style: none; }
-  .contact-items li {
-    display: flex; align-items: center; gap: 1rem;
-    padding: 0.85rem 0; border-bottom: 1px solid var(--rule);
-    font-size: 0.88rem;
-  }
-  .contact-items li:last-child { border: none; }
-  .contact-items a { color: var(--text); text-decoration: none; }
-  .contact-items a:hover { color: var(--gold); }
-  .c-label {
-    font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase;
-    color: var(--gold); width: 80px; flex-shrink: 0;
-  }
+/* Gold shimmer line across hero divider */
+.hero-right::before{
+  content:'';position:absolute;left:0;top:0;bottom:0;width:1px;
+  background:linear-gradient(180deg,transparent,var(--gold-lt),transparent);
+  z-index:3;opacity:0.6;
+}
 
-  .dl-cta {
-    display: inline-flex; align-items: center; gap: 0.75rem;
-    background: var(--ink); color: var(--white);
-    padding: 0.85rem 2rem; text-decoration: none;
-    font-size: 0.78rem; letter-spacing: 0.12em; text-transform: uppercase;
-    transition: background 0.2s; margin-top: 2rem;
-  }
-  .dl-cta:hover { background: var(--gold); }
+/* ── SECTIONS ── */
+section{padding:7rem 8vw;}
+section:nth-child(even){background:var(--warm);}
+.section-label{font-size:0.68rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--gold);margin-bottom:0.75rem;}
+h2{
+  font-family:'Cormorant Garamond',serif;font-size:clamp(2.2rem,3.5vw,3.5rem);
+  font-weight:300;color:var(--ink);margin-bottom:3rem;line-height:1.1;
+}
+h2 em{font-style:italic;color:var(--gold);}
 
-  /* ── FOOTER ── */
-  footer {
-    background: var(--ink); color: rgba(255,255,255,0.45);
-    text-align: center; padding: 2rem;
-    font-size: 0.75rem; letter-spacing: 0.08em;
-  }
-  footer strong { color: rgba(255,255,255,0.8); }
+/* ── ABOUT ── */
+.about-grid{display:grid;grid-template-columns:1.1fr 0.9fr;gap:5rem;align-items:start;}
+.about-text p{color:var(--text);line-height:1.85;margin-bottom:1.25rem;}
+.about-text p:first-child{font-size:1.1rem;}
 
-  /* ── ANIMATIONS ── */
-  .reveal {
-    opacity: 0; transform: translateY(28px);
-    transition: opacity 0.7s ease, transform 0.7s ease;
-  }
-  .reveal.visible { opacity: 1; transform: none; }
+.cred-list{list-style:none;}
+.cred-list li{
+  display:flex;align-items:flex-start;gap:1rem;
+  padding:1rem 0;border-bottom:1px solid var(--rule);font-size:0.9rem;
+  transition:background 0.2s,padding-left 0.2s;border-radius:4px;
+}
+.cred-list li:last-child{border-bottom:none;}
+.cred-list li:hover{padding-left:0.5rem;background:rgba(184,154,90,0.06);}
+.cred-icon{
+  width:28px;height:28px;flex-shrink:0;background:var(--gold);color:var(--white);
+  display:flex;align-items:center;justify-content:center;
+  font-size:0.65rem;font-weight:500;letter-spacing:0.05em;margin-top:0.1rem;
+  transition:transform 0.2s;
+}
+.cred-list li:hover .cred-icon{transform:rotate(8deg) scale(1.1);}
+.cred-body strong{display:block;font-size:0.8rem;letter-spacing:0.05em;color:var(--ink);}
+.cred-body span{color:var(--muted);font-size:0.8rem;}
 
-  /* ── RESPONSIVE ── */
-  @media(max-width: 900px) {
-    .hero { grid-template-columns: 1fr; min-height: auto; }
-    .hero-right { height: 55vw; }
-    .hero-left { padding: 6rem 6vw 4rem; }
-    .about-grid, .contact-grid { grid-template-columns: 1fr; gap: 3rem; }
-    .skills-grid { grid-template-columns: 1fr 1fr; }
-    .portfolio-grid { grid-template-columns: 1fr 1fr; }
-  }
-  @media(max-width: 600px) {
-    .portfolio-grid { grid-template-columns: 1fr; }
-    .skills-grid { grid-template-columns: 1fr; }
-    .hero-stats { gap: 2rem; }
-    .nav-links { display: none; }
-  }
+/* ── TIMELINE ── */
+.exp-timeline{position:relative;}
+.exp-timeline::before{
+  content:'';position:absolute;left:0;top:0;bottom:0;
+  width:1px;background:var(--rule);
+  transform-origin:top;
+  animation:lineGrow 1.5s ease forwards;
+  transform:scaleY(0);
+}
+@keyframes lineGrow{to{transform:scaleY(1);}}
+
+.exp-item{padding-left:2.5rem;position:relative;margin-bottom:3.5rem;}
+.exp-item::before{
+  content:'';position:absolute;left:-4px;top:0.45rem;
+  width:9px;height:9px;border-radius:50%;
+  background:var(--gold);border:2px solid var(--cream);
+  transition:transform 0.3s,box-shadow 0.3s;
+}
+.exp-item:hover::before{
+  transform:scale(1.5);
+  box-shadow:0 0 0 4px rgba(184,154,90,0.2);
+}
+.exp-date{font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin-bottom:0.35rem;}
+.exp-title{
+  font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:400;
+  color:var(--ink);margin-bottom:0.15rem;
+}
+.exp-company{font-size:0.82rem;color:var(--muted);margin-bottom:1rem;}
+.exp-bullets{list-style:none;}
+.exp-bullets li{
+  position:relative;padding-left:1.4rem;color:var(--text);
+  font-size:0.9rem;line-height:1.75;margin-bottom:0.5rem;
+}
+.exp-bullets li::before{content:'—';position:absolute;left:0;color:var(--gold);font-size:0.75rem;top:0.05rem;}
+
+/* ── SKILLS ── */
+.skills-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2rem;}
+.skill-card{
+  background:var(--white);padding:2rem;border-top:2px solid var(--gold);
+  transition:transform 0.3s,box-shadow 0.3s;
+  position:relative;overflow:hidden;
+}
+.skill-card::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:0;
+  background:linear-gradient(0deg,rgba(184,154,90,0.06),transparent);
+  transition:height 0.4s;
+}
+.skill-card:hover{transform:translateY(-6px);box-shadow:0 16px 40px rgba(0,0,0,0.08);}
+.skill-card:hover::after{height:100%;}
+.skill-card h3{font-family:'Cormorant Garamond',serif;font-size:1.25rem;font-weight:400;color:var(--ink);margin-bottom:1rem;}
+.skill-tags{display:flex;flex-wrap:wrap;gap:0.5rem;}
+.tag{
+  font-size:0.72rem;letter-spacing:0.08em;padding:0.3rem 0.75rem;
+  border:1px solid var(--rule);color:var(--muted);text-transform:uppercase;
+  transition:border-color 0.2s,color 0.2s,background 0.2s;
+}
+.tag:hover{border-color:var(--gold);color:var(--gold);background:rgba(184,154,90,0.06);}
+
+/* ── PORTFOLIO ── */
+.portfolio-filter{display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:3rem;}
+.filter-btn{
+  font-size:0.72rem;letter-spacing:0.1em;text-transform:uppercase;
+  padding:0.5rem 1.2rem;border:1px solid rgba(255,255,255,0.2);
+  background:transparent;color:rgba(255,255,255,0.5);
+  cursor:none;transition:all 0.25s;
+}
+.filter-btn:hover,.filter-btn.active{
+  background:var(--gold);border-color:var(--gold);color:var(--white);
+}
+
+.portfolio-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;}
+.project-card{
+  position:relative;overflow:hidden;background:var(--ink);cursor:none;
+  transform:translateY(0);transition:transform 0.4s cubic-bezier(.25,.46,.45,.94),box-shadow 0.4s;
+}
+.project-card:hover{transform:translateY(-8px);box-shadow:0 24px 60px rgba(0,0,0,0.4);}
+.project-card img{
+  width:100%;aspect-ratio:4/3;object-fit:cover;opacity:0.75;display:block;
+  transition:opacity 0.5s,transform 0.6s cubic-bezier(.25,.46,.45,.94);
+}
+.project-card:hover img{opacity:0.45;transform:scale(1.06);}
+.project-overlay{
+  position:absolute;bottom:0;left:0;right:0;
+  background:linear-gradient(transparent,rgba(0,0,0,0.88));
+  padding:3rem 1.5rem 1.5rem;
+  transform:translateY(1.5rem);opacity:0;transition:all 0.35s;
+}
+.project-card:hover .project-overlay{transform:translateY(0);opacity:1;}
+.project-tag{font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold-lt);margin-bottom:0.35rem;}
+.project-name{font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:400;color:var(--white);margin-bottom:0.25rem;}
+.project-loc{font-size:0.75rem;color:rgba(255,255,255,0.6);}
+.project-always{
+  position:absolute;top:1rem;left:1rem;background:var(--gold);
+  font-size:0.62rem;letter-spacing:0.1em;text-transform:uppercase;
+  color:var(--white);padding:0.2rem 0.6rem;
+}
+
+/* ── CONTACT ── */
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:start;}
+.contact-intro{
+  font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:300;
+  line-height:1.5;color:var(--ink);margin-bottom:2rem;
+}
+.contact-items{list-style:none;}
+.contact-items li{
+  display:flex;align-items:center;gap:1rem;
+  padding:0.85rem 0;border-bottom:1px solid var(--rule);font-size:0.88rem;
+  transition:padding-left 0.2s;
+}
+.contact-items li:hover{padding-left:0.5rem;}
+.contact-items li:last-child{border:none;}
+.contact-items a{color:var(--text);text-decoration:none;transition:color 0.2s;}
+.contact-items a:hover{color:var(--gold);}
+.c-label{font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);width:80px;flex-shrink:0;}
+
+.dl-cta{
+  display:inline-flex;align-items:center;gap:0.75rem;
+  background:var(--ink);color:var(--white);padding:0.85rem 2rem;
+  text-decoration:none;font-size:0.78rem;letter-spacing:0.12em;text-transform:uppercase;
+  transition:background 0.3s,transform 0.2s,box-shadow 0.3s;margin-top:2rem;
+  position:relative;overflow:hidden;
+}
+.dl-cta::before{
+  content:'';position:absolute;inset:0;background:rgba(255,255,255,0.07);
+  transform:translateX(-110%) skewX(-15deg);transition:transform 0.5s;
+}
+.dl-cta:hover::before{transform:translateX(110%) skewX(-15deg);}
+.dl-cta:hover{background:var(--gold);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,0.15);}
+
+/* ── FOOTER ── */
+footer{
+  background:var(--ink);color:rgba(255,255,255,0.45);
+  text-align:center;padding:2rem;font-size:0.75rem;letter-spacing:0.08em;
+}
+footer strong{color:rgba(255,255,255,0.8);}
+
+/* ── SCROLL REVEAL ── */
+.reveal{opacity:0;transform:translateY(32px);transition:opacity 0.75s cubic-bezier(.25,.46,.45,.94),transform 0.75s cubic-bezier(.25,.46,.45,.94);}
+.reveal.visible{opacity:1;transform:none;}
+.reveal-left{opacity:0;transform:translateX(-32px);transition:opacity 0.75s .1s,transform 0.75s .1s;}
+.reveal-left.visible{opacity:1;transform:none;}
+.reveal-right{opacity:0;transform:translateX(32px);transition:opacity 0.75s .2s,transform 0.75s .2s;}
+.reveal-right.visible{opacity:1;transform:none;}
+
+/* Stagger children */
+.stagger > *{opacity:0;transform:translateY(24px);transition:opacity 0.6s,transform 0.6s;}
+.stagger.visible > *:nth-child(1){opacity:1;transform:none;transition-delay:0s;}
+.stagger.visible > *:nth-child(2){opacity:1;transform:none;transition-delay:0.1s;}
+.stagger.visible > *:nth-child(3){opacity:1;transform:none;transition-delay:0.2s;}
+.stagger.visible > *:nth-child(4){opacity:1;transform:none;transition-delay:0.3s;}
+.stagger.visible > *:nth-child(5){opacity:1;transform:none;transition-delay:0.4s;}
+.stagger.visible > *:nth-child(6){opacity:1;transform:none;transition-delay:0.5s;}
+
+/* ── SECTION HEADING UNDERLINE DRAW ── */
+.draw-line{
+  position:relative;display:inline-block;
+}
+.draw-line::after{
+  content:'';position:absolute;bottom:-4px;left:0;right:0;height:1px;
+  background:var(--gold);transform:scaleX(0);transform-origin:left;
+  transition:transform 0.8s 0.2s cubic-bezier(.77,0,.175,1);
+}
+.draw-line.visible::after{transform:scaleX(1);}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  .hero{grid-template-columns:1fr;min-height:auto;}
+  .hero-right{height:55vw;}
+  .hero-left{padding:6rem 6vw 4rem;}
+  .about-grid,.contact-grid{grid-template-columns:1fr;gap:3rem;}
+  .skills-grid{grid-template-columns:1fr 1fr;}
+  .portfolio-grid{grid-template-columns:1fr 1fr;}
+}
+@media(max-width:600px){
+  .portfolio-grid{grid-template-columns:1fr;}
+  .skills-grid{grid-template-columns:1fr;}
+  .hero-stats{gap:2rem;}
+  .nav-links{display:none;}
+  body{cursor:auto;}
+  .cursor,.cursor-ring{display:none;}
+}
 </style>
 </head>
 <body>
 
+<!-- Custom cursor -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- Progress bar -->
+<div id="progress-bar"></div>
+
 <!-- ── NAV ── -->
-<nav>
+<nav id="nav">
   <span class="nav-logo">Hamid Babapoor</span>
   <ul class="nav-links">
     <li><a href="#about">About</a></li>
@@ -351,21 +394,21 @@
 
 <!-- ── HERO ── -->
 <div class="hero">
-  <div class="hero-left reveal">
-    <p class="eyebrow">Licensed Builder NSW · Civil Engineer</p>
+  <div class="hero-left">
+    <p class="eyebrow">Licensed Builder NSW · Civil Engineer · 18+ Years</p>
     <h1>Site Manager &amp;<br><em>Luxury Builder</em><br>Sydney</h1>
-    <p class="hero-body">18+ years delivering bespoke high-end custom homes across Sydney and the Central Coast. Every Turyn project — from tender through defect rectification — supervised personally.</p>
+    <p class="hero-body">Delivering bespoke high-end custom homes across Sydney and the Central Coast. Every Turyn project — from tender through defect rectification — supervised personally.</p>
     <div class="hero-stats">
       <div>
-        <div class="stat-val">15+</div>
+        <div class="stat-val" data-target="15" data-suffix="+">0</div>
         <div class="stat-label">Luxury homes delivered</div>
       </div>
       <div>
-        <div class="stat-val">$35M+</div>
+        <div class="stat-val" data-target="35" data-prefix="$" data-suffix="M+">$0</div>
         <div class="stat-label">Construction value</div>
       </div>
       <div>
-        <div class="stat-val">0</div>
+        <div class="stat-val" data-target="0">0</div>
         <div class="stat-label">Lost-time injuries</div>
       </div>
     </div>
@@ -374,65 +417,47 @@
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
     </a>
   </div>
-  <div class="hero-right">
-    <img src="https://turyn.com.au/images/project-02-cover.jpg" alt="Kellyville luxury custom home — TURYN"/>
+  <div class="hero-right" id="hero-img">
+    <img src="https://turyn.com.au/images/project-02-cover.jpg" alt="Kellyville luxury custom home — TURYN" id="parallax-img"/>
     <div class="hero-caption">7 McMillan Circuit, Kellyville NSW · Turyn Pty Ltd</div>
   </div>
 </div>
 
 <!-- ── ABOUT ── -->
 <section id="about">
-  <div class="section-label">Background</div>
-  <h2>Builder. Engineer.<br><em>Site Leader.</em></h2>
+  <div class="section-label reveal">Background</div>
+  <h2 class="reveal">Builder. Engineer.<br><em class="draw-line">Site Leader.</em></h2>
   <div class="about-grid">
-    <div class="about-text reveal">
+    <div class="about-text reveal-left">
       <p>I'm Hamid Babapoor — a licensed builder and civil engineer with 18 years of hands-on site leadership across Sydney's most demanding residential projects. Since 2019 I have been the sole site manager at Turyn Pty Ltd, personally supervising every project from contract award to final handover and defect rectification.</p>
       <p>My background is unusual: I came up through civil engineering before moving into residential construction management, which means I read a site differently to most supervisors. I understand the structure before the finishes, the program before the subcontractor, the contract before the variation.</p>
-      <p>I work hands-on. That's deliberate. The quality you see in Turyn's portfolio — the joinery tolerances, the wet-area detailing, the finish consistency — comes from someone who doesn't just manage from the office. It comes from someone who is on site every day.</p>
+      <p>I work hands-on. The quality you see in Turyn's portfolio — the joinery tolerances, the wet-area detailing, the finish consistency — comes from someone who is on site every day.</p>
     </div>
-    <div class="reveal">
-      <ul class="cred-list">
+    <div class="reveal-right">
+      <ul class="cred-list stagger">
         <li>
           <div class="cred-icon">LIC</div>
-          <div class="cred-body">
-            <strong>Builder's Licence — NSW Fair Trading</strong>
-            <span>Issued September 2024 · Current</span>
-          </div>
+          <div class="cred-body"><strong>Builder's Licence — NSW Fair Trading</strong><span>Issued September 2024 · Current</span></div>
         </li>
         <li>
           <div class="cred-icon">B.E</div>
-          <div class="cred-body">
-            <strong>Bachelor of Engineering (Civil)</strong>
-            <span>Ferdowsi University of Mashhad · 2005</span>
-          </div>
+          <div class="cred-body"><strong>Bachelor of Engineering (Civil)</strong><span>Ferdowsi University of Mashhad · 2005</span></div>
         </li>
         <li>
           <div class="cred-icon">DIP</div>
-          <div class="cred-body">
-            <strong>Diploma of Building &amp; Construction</strong>
-            <span>Guest Building Training</span>
-          </div>
+          <div class="cred-body"><strong>Diploma of Building &amp; Construction</strong><span>Guest Building Training</span></div>
         </li>
         <li>
           <div class="cred-icon">FA</div>
-          <div class="cred-body">
-            <strong>First Aid Certificate</strong>
-            <span>Current</span>
-          </div>
+          <div class="cred-body"><strong>First Aid Certificate</strong><span>Current</span></div>
         </li>
         <li>
           <div class="cred-icon">WC</div>
-          <div class="cred-body">
-            <strong>White Card — Construction Induction</strong>
-            <span>General Construction, WorkSafe NSW</span>
-          </div>
+          <div class="cred-body"><strong>White Card — Construction Induction</strong><span>General Construction, WorkSafe NSW</span></div>
         </li>
         <li>
           <div class="cred-icon">LAN</div>
-          <div class="cred-body">
-            <strong>Languages</strong>
-            <span>English · Farsi · Spanish</span>
-          </div>
+          <div class="cred-body"><strong>Languages</strong><span>English · Farsi · Spanish</span></div>
         </li>
       </ul>
     </div>
@@ -441,8 +466,8 @@
 
 <!-- ── EXPERIENCE ── -->
 <section id="experience">
-  <div class="section-label">Career</div>
-  <h2>Experience &amp;<br><em>Track Record</em></h2>
+  <div class="section-label reveal">Career</div>
+  <h2 class="reveal">Experience &amp;<br><em class="draw-line">Track Record</em></h2>
   <div class="exp-timeline">
 
     <div class="exp-item reveal">
@@ -451,7 +476,7 @@
       <div class="exp-company">Turyn Pty Ltd · turyn.com.au · Sydney &amp; Central Coast NSW</div>
       <ul class="exp-bullets">
         <li>Delivered 15+ bespoke luxury custom homes end-to-end as sole site manager — $35M+ in total construction value — from contract award through defect rectification, zero client-escalated disputes.</li>
-        <li>Enforced WHS/OH&S compliance across all sites achieving zero lost-time injuries across 7+ years of continuous operations via SWMS and daily safety audits.</li>
+        <li>Enforced WHS/OH&amp;S compliance across all sites achieving zero lost-time injuries across 7+ years via SWMS and daily safety audits.</li>
         <li>Managed project programs using Procore and MS Project, maintaining schedule and budget across concurrent active sites.</li>
         <li>Prepared, submitted, and won all variation claims and progress claims, recovering full contract value on every project.</li>
         <li>Directed 8–12 subcontractors per project through Buildertrend — concrete, framing, wet trades, and finishes — ensuring specification compliance on high-end bespoke builds.</li>
@@ -464,9 +489,9 @@
       <div class="exp-title">Site Manager / Contract Administrator</div>
       <div class="exp-company">Granny Flat Leaders · Sydney NSW</div>
       <ul class="exp-bullets">
-        <li>Simultaneously managed up to 15 active residential construction sites across Sydney, coordinating 40+ subcontractors to deliver every project on programme and within budget.</li>
-        <li>Maintained full WHS/OH&S compliance across all sites with zero safety incidents during tenure.</li>
-        <li>Coordinated materials procurement and trade scheduling using Buildertrend to maintain continuous workflow and meet client handover dates.</li>
+        <li>Simultaneously managed up to 15 active residential construction sites across Sydney, coordinating 40+ subcontractors.</li>
+        <li>Maintained full WHS/OH&amp;S compliance across all sites with zero safety incidents during tenure.</li>
+        <li>Coordinated materials procurement and trade scheduling using Buildertrend to meet client handover dates.</li>
       </ul>
     </div>
 
@@ -475,7 +500,7 @@
       <div class="exp-title">Site Foreperson / Site Supervisor</div>
       <div class="exp-company">Noor Development · Sydney NSW</div>
       <ul class="exp-bullets">
-        <li>Supervised 3 concurrent double-storey double-brick residential projects (2 duplexes + 5-townhouse complex) with concrete slab and timber flat roof construction, slab to completion.</li>
+        <li>Supervised 3 concurrent double-storey double-brick residential projects (2 duplexes + 5-townhouse complex) slab to completion.</li>
       </ul>
     </div>
 
@@ -484,7 +509,7 @@
       <div class="exp-title">Leading Hand Carpenter</div>
       <div class="exp-company">Exact Form — Project V · Parramatta NSW</div>
       <ul class="exp-bullets">
-        <li>Led carpentry and formwork team on a $300M 29-floor luxury high-rise in Parramatta, liaising with planning engineers to hit every concrete pour milestone.</li>
+        <li>Led carpentry and formwork team on a $300M 29-floor luxury high-rise in Parramatta, hitting every concrete pour milestone.</li>
       </ul>
     </div>
 
@@ -493,7 +518,7 @@
       <div class="exp-title">Site Engineer / Site Manager</div>
       <div class="exp-company">Basa Construction · International</div>
       <ul class="exp-bullets">
-        <li>Delivered 134 residential units across multiple projects and a 5,000m² concrete production facility as site engineer and site manager.</li>
+        <li>Delivered 134 residential units across multiple projects and a 5,000m² concrete production facility.</li>
       </ul>
     </div>
 
@@ -501,264 +526,121 @@
 </section>
 
 <!-- ── PORTFOLIO ── -->
-<section id="portfolio" style="background:var(--ink); color:var(--white);">
-  <div class="section-label" style="color:var(--gold-lt);">Selected Works</div>
-  <h2 style="color:var(--white);">Turyn Pty Ltd<br><em>Projects</em></h2>
-  <p style="color:rgba(255,255,255,0.55); max-width:55ch; margin-bottom:3rem; font-size:0.95rem; line-height:1.8;">Every project below was supervised by me personally — from slab through handover. Fifteen builds across metropolitan Sydney: custom freestanding homes, knockdown rebuilds, duplexes, and specialist NDIS construction.</p>
+<section id="portfolio" style="background:var(--ink);color:var(--white);">
+  <div class="section-label reveal" style="color:var(--gold-lt);">Selected Works</div>
+  <h2 class="reveal" style="color:var(--white);">Turyn Pty Ltd<br><em class="draw-line" style="--gold:#D4B97A;">Projects</em></h2>
+  <p class="reveal" style="color:rgba(255,255,255,0.55);max-width:55ch;margin-bottom:3rem;font-size:0.95rem;line-height:1.8;">Every project below was supervised by me personally — slab through handover. Fifteen builds across metropolitan Sydney.</p>
 
-  <div class="portfolio-filter">
-    <button class="filter-btn active" onclick="filterProjects('all')">All (15)</button>
-    <button class="filter-btn" onclick="filterProjects('freestanding')">Freestanding</button>
-    <button class="filter-btn" onclick="filterProjects('kdrb')">Knockdown Rebuild</button>
-    <button class="filter-btn" onclick="filterProjects('duplex')">Duplex</button>
-    <button class="filter-btn" onclick="filterProjects('extension')">Extension &amp; Reno</button>
+  <div class="portfolio-filter reveal">
+    <button class="filter-btn active" onclick="filterProjects('all',this)">All (15)</button>
+    <button class="filter-btn" onclick="filterProjects('freestanding',this)">Freestanding</button>
+    <button class="filter-btn" onclick="filterProjects('kdrb',this)">Knockdown Rebuild</button>
+    <button class="filter-btn" onclick="filterProjects('duplex',this)">Duplex</button>
+    <button class="filter-btn" onclick="filterProjects('extension',this)">Extension &amp; Reno</button>
   </div>
 
-  <div class="portfolio-grid" id="portfolio-grid">
-
+  <div class="portfolio-grid stagger" id="portfolio-grid">
     <div class="project-card" data-type="duplex">
       <div class="project-always">Joint Venture</div>
       <img src="https://turyn.com.au/images/project-01-cover.jpg" alt="16 & 18 MacKillop Drive Morisset" loading="lazy"/>
-      <div class="project-overlay">
-        <div class="project-tag">Duplex · Joint Venture</div>
-        <div class="project-name">16 &amp; 18 MacKillop Drive</div>
-        <div class="project-loc">Morisset, NSW · Both sold within 3 weeks</div>
-      </div>
+      <div class="project-overlay"><div class="project-tag">Duplex · Joint Venture</div><div class="project-name">16 &amp; 18 MacKillop Drive</div><div class="project-loc">Morisset, NSW · Both sold within 3 weeks</div></div>
     </div>
-
     <div class="project-card" data-type="freestanding">
       <img src="https://turyn.com.au/images/project-02-cover.jpg" alt="7 McMillan Circuit Kellyville" loading="lazy"/>
-      <div class="project-overlay">
-        <div class="project-tag">Freestanding · Luxury</div>
-        <div class="project-name">7 McMillan Circuit</div>
-        <div class="project-loc">Kellyville, NSW · Double-storey with pool</div>
-      </div>
+      <div class="project-overlay"><div class="project-tag">Freestanding · Luxury</div><div class="project-name">7 McMillan Circuit</div><div class="project-loc">Kellyville, NSW · Double-storey with pool</div></div>
     </div>
-
     <div class="project-card" data-type="freestanding">
       <img src="https://turyn.com.au/images/project-03-cover.jpg" alt="2 Wood Bridge Palace Bella Vista" loading="lazy"/>
-      <div class="project-overlay">
-        <div class="project-tag">Freestanding · Luxury</div>
-        <div class="project-name">2 Wood Bridge Palace</div>
-        <div class="project-loc">Bella Vista, NSW · Corner-block, gym &amp; pool</div>
-      </div>
+      <div class="project-overlay"><div class="project-tag">Freestanding · Luxury</div><div class="project-name">2 Wood Bridge Palace</div><div class="project-loc">Bella Vista, NSW · Corner-block, gym &amp; pool</div></div>
     </div>
-
     <div class="project-card" data-type="freestanding">
       <div class="project-always">TURYN Dev</div>
       <img src="https://turyn.com.au/images/project-4-cover.jpg" alt="7 Carrawinya Crescent North Kellyville" loading="lazy"/>
-      <div class="project-overlay">
-        <div class="project-tag">TURYN Development · Three-Storey</div>
-        <div class="project-name">7 Carrawinya Crescent</div>
-        <div class="project-loc">North Kellyville · Tennis court &amp; pool</div>
-      </div>
+      <div class="project-overlay"><div class="project-tag">TURYN Development · Three-Storey</div><div class="project-name">7 Carrawinya Crescent</div><div class="project-loc">North Kellyville · Tennis court &amp; pool</div></div>
     </div>
-
     <div class="project-card" data-type="freestanding">
       <div class="project-always">NDIS Specialist</div>
       <img src="https://turyn.com.au/images/project-5-cover.PNG" alt="48 Wood Street Lane Cove West" loading="lazy"/>
-      <div class="project-overlay">
-        <div class="project-tag">Specialist NDIS · Three-Storey</div>
-        <div class="project-name">48 Wood Street</div>
-        <div class="project-loc">Lane Cove West · Lift, pool, full NDIS compliance</div>
-      </div>
+      <div class="project-overlay"><div class="project-tag">Specialist NDIS · Three-Storey</div><div class="project-name">48 Wood Street</div><div class="project-loc">Lane Cove West · Lift, pool, full NDIS compliance</div></div>
     </div>
-
     <div class="project-card" data-type="freestanding">
       <img src="https://turyn.com.au/images/project-6-cover.jpg" alt="9 Carrawinya Crescent North Kellyville" loading="lazy"/>
-      <div class="project-overlay">
-        <div class="project-tag">Freestanding · High-End</div>
-        <div class="project-name">9 Carrawinya Crescent</div>
-        <div class="project-loc">North Kellyville · Pool &amp; private gymnasium</div>
-      </div>
+      <div class="project-overlay"><div class="project-tag">Freestanding · High-End</div><div class="project-name">9 Carrawinya Crescent</div><div class="project-loc">North Kellyville · Pool &amp; private gymnasium</div></div>
     </div>
-
     <div class="project-card" data-type="kdrb">
       <img src="https://turyn.com.au/images/project-07-cover.jpg" alt="27 Sirius Street Dundas" loading="lazy"/>
-      <div class="project-overlay">
-        <div class="project-tag">Knockdown Rebuild · French Provincial</div>
-        <div class="project-name">27 Sirius Street</div>
-        <div class="project-loc">Dundas, NSW · Swimming pool, landscaped garden</div>
-      </div>
+      <div class="project-overlay"><div class="project-tag">Knockdown Rebuild · French Provincial</div><div class="project-name">27 Sirius Street</div><div class="project-loc">Dundas, NSW · Swimming pool, landscaped garden</div></div>
     </div>
-
     <div class="project-card" data-type="kdrb">
       <img src="https://turyn.com.au/images/project-08-1.jpg" alt="26 Wellman Road Forestville" loading="lazy"/>
-      <div class="project-overlay">
-        <div class="project-tag">Knockdown Rebuild · Hampton Style</div>
-        <div class="project-name">26 Wellman Road</div>
-        <div class="project-loc">Forestville, NSW · Weatherboard &amp; pool</div>
-      </div>
+      <div class="project-overlay"><div class="project-tag">Knockdown Rebuild · Hampton Style</div><div class="project-name">26 Wellman Road</div><div class="project-loc">Forestville, NSW · Weatherboard &amp; pool</div></div>
     </div>
-
     <div class="project-card" data-type="extension">
       <img src="https://turyn.com.au/images/project-9-cover.jpg" alt="62 Grace Avenue Frenchs Forest" loading="lazy"/>
-      <div class="project-overlay">
-        <div class="project-tag">Extension &amp; Renovation · High-End</div>
-        <div class="project-name">62 Grace Avenue</div>
-        <div class="project-loc">Frenchs Forest, NSW · Full structural renovation</div>
-      </div>
+      <div class="project-overlay"><div class="project-tag">Extension &amp; Renovation · High-End</div><div class="project-name">62 Grace Avenue</div><div class="project-loc">Frenchs Forest, NSW · Full structural renovation</div></div>
     </div>
-
     <div class="project-card" data-type="extension">
       <img src="https://turyn.com.au/images/project-10-cover.jpg" alt="43 Macintosh Road Dee Why" loading="lazy"/>
-      <div class="project-overlay">
-        <div class="project-tag">Extension · Double-Storey + Granny Flat</div>
-        <div class="project-name">43 Macintosh Road</div>
-        <div class="project-loc">Dee Why, NSW · Pool, spa &amp; granny flat</div>
-      </div>
+      <div class="project-overlay"><div class="project-tag">Extension · Double-Storey + Granny Flat</div><div class="project-name">43 Macintosh Road</div><div class="project-loc">Dee Why, NSW · Pool, spa &amp; granny flat</div></div>
     </div>
-
     <div class="project-card" data-type="freestanding">
       <img src="https://turyn.com.au/images/project-11-cover.JPG" alt="4 Gammel Street Rydalmere" loading="lazy"/>
-      <div class="project-overlay">
-        <div class="project-tag">Freestanding · Double-Storey</div>
-        <div class="project-name">4 Gammel Street</div>
-        <div class="project-loc">Rydalmere, NSW · Pool, open-plan living</div>
-      </div>
+      <div class="project-overlay"><div class="project-tag">Freestanding · Double-Storey</div><div class="project-name">4 Gammel Street</div><div class="project-loc">Rydalmere, NSW · Pool, open-plan living</div></div>
     </div>
-
     <div class="project-card" data-type="extension">
       <img src="https://turyn.com.au/images/project-12-cover.jpg" alt="69 Parsonage Road Castle Hill" loading="lazy"/>
-      <div class="project-overlay">
-        <div class="project-tag">Extension &amp; Renovation · High-End</div>
-        <div class="project-name">69 Parsonage Road</div>
-        <div class="project-loc">Castle Hill, NSW · Structural reconfiguration</div>
-      </div>
+      <div class="project-overlay"><div class="project-tag">Extension &amp; Renovation · High-End</div><div class="project-name">69 Parsonage Road</div><div class="project-loc">Castle Hill, NSW · Structural reconfiguration</div></div>
     </div>
-
     <div class="project-card" data-type="kdrb">
       <img src="https://turyn.com.au/images/project-13-cover.jpg" alt="1 Kastelan St Blacktown" loading="lazy"/>
-      <div class="project-overlay">
-        <div class="project-tag">Knockdown Rebuild · Dual-Occupancy</div>
-        <div class="project-name">1 Kastelan St / 4 Melony St</div>
-        <div class="project-loc">Blacktown, NSW · Corner block, 2 homes</div>
-      </div>
+      <div class="project-overlay"><div class="project-tag">Knockdown Rebuild · Dual-Occupancy</div><div class="project-name">1 Kastelan St / 4 Melony St</div><div class="project-loc">Blacktown, NSW · Corner block, 2 homes</div></div>
     </div>
-
     <div class="project-card" data-type="freestanding">
       <img src="https://turyn.com.au/images/project-14-cover.jpg" alt="103 Rosedale Circuit Carnes Hill" loading="lazy"/>
-      <div class="project-overlay">
-        <div class="project-tag">Freestanding · Double-Storey</div>
-        <div class="project-name">103 Rosedale Circuit</div>
-        <div class="project-loc">Carnes Hill, NSW · Pool, 4+ bedrooms</div>
-      </div>
+      <div class="project-overlay"><div class="project-tag">Freestanding · Double-Storey</div><div class="project-name">103 Rosedale Circuit</div><div class="project-loc">Carnes Hill, NSW · Pool, 4+ bedrooms</div></div>
     </div>
-
     <div class="project-card" data-type="kdrb">
       <img src="https://turyn.com.au/images/project-02-cover.jpg" alt="80 Nirranda Street Concord West" loading="lazy"/>
-      <div class="project-overlay">
-        <div class="project-tag">Knockdown Rebuild · High-End</div>
-        <div class="project-name">80 Nirranda Street</div>
-        <div class="project-loc">Concord West, NSW · Pool &amp; freestanding cabana</div>
-      </div>
+      <div class="project-overlay"><div class="project-tag">Knockdown Rebuild · High-End</div><div class="project-name">80 Nirranda Street</div><div class="project-loc">Concord West, NSW · Pool &amp; freestanding cabana</div></div>
     </div>
-
   </div>
 </section>
 
 <!-- ── SKILLS ── -->
 <section id="skills">
-  <div class="section-label">Competencies</div>
-  <h2>Skills &amp;<br><em>Software</em></h2>
-  <div class="skills-grid reveal">
-    <div class="skill-card">
-      <h3>Construction Software</h3>
-      <div class="skill-tags">
-        <span class="tag">Procore</span>
-        <span class="tag">Buildertrend</span>
-        <span class="tag">MS Project</span>
-        <span class="tag">AutoCAD</span>
-        <span class="tag">Microsoft Office</span>
-      </div>
-    </div>
-    <div class="skill-card">
-      <h3>Site Management</h3>
-      <div class="skill-tags">
-        <span class="tag">Program Scheduling</span>
-        <span class="tag">Cost Control</span>
-        <span class="tag">Variation Claims</span>
-        <span class="tag">Progress Claims</span>
-        <span class="tag">Subcontractor Mgmt</span>
-        <span class="tag">Defect Rectification</span>
-      </div>
-    </div>
-    <div class="skill-card">
-      <h3>Compliance &amp; Safety</h3>
-      <div class="skill-tags">
-        <span class="tag">WHS / OH&S</span>
-        <span class="tag">SWMS</span>
-        <span class="tag">Safety Audits</span>
-        <span class="tag">First Aid</span>
-        <span class="tag">White Card</span>
-      </div>
-    </div>
-    <div class="skill-card">
-      <h3>Project Types</h3>
-      <div class="skill-tags">
-        <span class="tag">Luxury Custom Homes</span>
-        <span class="tag">Knockdown Rebuild</span>
-        <span class="tag">Duplex</span>
-        <span class="tag">NDIS Specialist</span>
-        <span class="tag">Extensions &amp; Reno</span>
-      </div>
-    </div>
-    <div class="skill-card">
-      <h3>Engineering</h3>
-      <div class="skill-tags">
-        <span class="tag">Civil Engineering</span>
-        <span class="tag">Structural Reading</span>
-        <span class="tag">Concrete Construction</span>
-        <span class="tag">Formwork</span>
-        <span class="tag">Estimating</span>
-      </div>
-    </div>
-    <div class="skill-card">
-      <h3>Languages</h3>
-      <div class="skill-tags">
-        <span class="tag">English — Fluent</span>
-        <span class="tag">Farsi — Fluent</span>
-        <span class="tag">Spanish — Conversational</span>
-      </div>
-    </div>
+  <div class="section-label reveal">Competencies</div>
+  <h2 class="reveal">Skills &amp;<br><em class="draw-line">Software</em></h2>
+  <div class="skills-grid stagger">
+    <div class="skill-card"><h3>Construction Software</h3><div class="skill-tags"><span class="tag">Procore</span><span class="tag">Buildertrend</span><span class="tag">MS Project</span><span class="tag">AutoCAD</span><span class="tag">Microsoft Office</span></div></div>
+    <div class="skill-card"><h3>Site Management</h3><div class="skill-tags"><span class="tag">Program Scheduling</span><span class="tag">Cost Control</span><span class="tag">Variation Claims</span><span class="tag">Progress Claims</span><span class="tag">Subcontractor Mgmt</span><span class="tag">Defect Rectification</span></div></div>
+    <div class="skill-card"><h3>Compliance &amp; Safety</h3><div class="skill-tags"><span class="tag">WHS / OH&amp;S</span><span class="tag">SWMS</span><span class="tag">Safety Audits</span><span class="tag">First Aid</span><span class="tag">White Card</span></div></div>
+    <div class="skill-card"><h3>Project Types</h3><div class="skill-tags"><span class="tag">Luxury Custom Homes</span><span class="tag">Knockdown Rebuild</span><span class="tag">Duplex</span><span class="tag">NDIS Specialist</span><span class="tag">Extensions &amp; Reno</span></div></div>
+    <div class="skill-card"><h3>Engineering</h3><div class="skill-tags"><span class="tag">Civil Engineering</span><span class="tag">Structural Reading</span><span class="tag">Concrete Construction</span><span class="tag">Formwork</span><span class="tag">Estimating</span></div></div>
+    <div class="skill-card"><h3>Languages</h3><div class="skill-tags"><span class="tag">English — Fluent</span><span class="tag">Farsi — Fluent</span><span class="tag">Spanish — Conversational</span></div></div>
   </div>
 </section>
 
 <!-- ── CONTACT ── -->
 <section id="contact">
-  <div class="section-label">Get in Touch</div>
-  <h2>Available for<br><em>New Projects</em></h2>
+  <div class="section-label reveal">Get in Touch</div>
+  <h2 class="reveal">Available for<br><em class="draw-line">New Projects</em></h2>
   <div class="contact-grid">
-    <div class="reveal">
+    <div class="reveal-left">
       <p class="contact-intro">"Ready to discuss your next luxury residential project, knockdown rebuild, or development opportunity."</p>
-      <p style="color:var(--muted); font-size:0.9rem; line-height:1.8; margin-bottom:1.5rem;">Based in Sydney, NSW. Available for projects across metropolitan Sydney and the Central Coast. Immediate start available for the right opportunity.</p>
+      <p style="color:var(--muted);font-size:0.9rem;line-height:1.8;margin-bottom:1.5rem;">Based in Sydney, NSW. Available for projects across metropolitan Sydney and the Central Coast. Immediate start available for the right opportunity.</p>
       <a class="dl-cta" href="hamidbabapoorcv.docx">
         Download ATS Resume
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
       </a>
     </div>
-    <div class="reveal">
+    <div class="reveal-right">
       <ul class="contact-items">
-        <li>
-          <span class="c-label">Mobile</span>
-          <a href="tel:0416808040">0416 808 040</a>
-        </li>
-        <li>
-          <span class="c-label">Email</span>
-          <a href="mailto:h.babapoor@gmail.com">h.babapoor@gmail.com</a>
-        </li>
-        <li>
-          <span class="c-label">LinkedIn</span>
-          <a href="https://linkedin.com/in/hamid-babapoor-b128814b" target="_blank">hamid-babapoor-b128814b</a>
-        </li>
-        <li>
-          <span class="c-label">Licence</span>
-          <span>Builder's Licence — NSW Fair Trading, Sep 2024</span>
-        </li>
-        <li>
-          <span class="c-label">Location</span>
-          <span>Sydney &amp; Central Coast, NSW</span>
-        </li>
+        <li><span class="c-label">Mobile</span><a href="tel:0416808040">0416 808 040</a></li>
+        <li><span class="c-label">Email</span><a href="mailto:h.babapoor@gmail.com">h.babapoor@gmail.com</a></li>
+        <li><span class="c-label">LinkedIn</span><a href="https://linkedin.com/in/hamid-babapoor-b128814b" target="_blank">hamid-babapoor-b128814b</a></li>
+        <li><span class="c-label">Online CV</span><a href="https://hbabapoor.github.io" target="_blank">hbabapoor.github.io</a></li>
+        <li><span class="c-label">Licence</span><span>Builder's Licence — NSW Fair Trading, Sep 2024</span></li>
+        <li><span class="c-label">Location</span><span>Sydney &amp; Central Coast, NSW</span></li>
       </ul>
     </div>
   </div>
@@ -766,31 +648,117 @@
 
 <!-- ── FOOTER ── -->
 <footer>
-  <strong>Hamid Babapoor</strong> · Licensed Builder NSW · Site &amp; Project Manager · Sydney &nbsp;|&nbsp; Portfolio images courtesy of <a href="https://turyn.com.au" style="color:var(--gold);">Turyn Pty Ltd</a>
+  <strong>Hamid Babapoor</strong> · Licensed Builder NSW · Site &amp; Project Manager · Sydney
+  &nbsp;|&nbsp; Portfolio images courtesy of <a href="https://turyn.com.au" style="color:var(--gold);">Turyn Pty Ltd</a>
 </footer>
 
 <script>
-  // Scroll reveal
-  const reveals = document.querySelectorAll('.reveal');
-  const io = new IntersectionObserver(entries => {
-    entries.forEach(e => { if(e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } });
-  }, { threshold: 0.12 });
-  reveals.forEach(el => io.observe(el));
+// ── CUSTOM CURSOR ──
+const cursor = document.getElementById('cursor');
+const ring   = document.getElementById('cursorRing');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{
+  mx=e.clientX; my=e.clientY;
+  cursor.style.left=mx+'px'; cursor.style.top=my+'px';
+});
+function animRing(){
+  rx+=(mx-rx)*0.12; ry+=(my-ry)*0.12;
+  ring.style.left=rx+'px'; ring.style.top=ry+'px';
+  requestAnimationFrame(animRing);
+}
+animRing();
+document.querySelectorAll('a,button,.project-card,.skill-card,.cred-list li').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{
+    ring.style.width='56px'; ring.style.height='56px';
+    ring.style.borderColor='var(--gold)'; ring.style.opacity='0.8';
+    cursor.style.transform='translate(-50%,-50%) scale(1.8)';
+  });
+  el.addEventListener('mouseleave',()=>{
+    ring.style.width='36px'; ring.style.height='36px';
+    ring.style.opacity='0.5';
+    cursor.style.transform='translate(-50%,-50%) scale(1)';
+  });
+});
 
-  // Portfolio filter
-  function filterProjects(type) {
-    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-    event.target.classList.add('active');
-    document.querySelectorAll('.project-card').forEach(card => {
-      if(type === 'all' || card.dataset.type === type) {
-        card.style.display = '';
-        setTimeout(() => card.style.opacity = '1', 10);
-      } else {
-        card.style.opacity = '0';
-        setTimeout(() => card.style.display = 'none', 200);
-      }
-    });
+// ── SCROLL PROGRESS BAR ──
+const bar = document.getElementById('progress-bar');
+window.addEventListener('scroll',()=>{
+  const pct = window.scrollY/(document.body.scrollHeight-window.innerHeight)*100;
+  bar.style.width=pct+'%';
+  document.getElementById('nav').classList.toggle('scrolled',window.scrollY>40);
+});
+
+// ── PARALLAX HERO IMAGE ──
+const pImg = document.getElementById('parallax-img');
+window.addEventListener('scroll',()=>{
+  const y = window.scrollY;
+  if(y < window.innerHeight*1.5){
+    pImg.style.transform = `scale(1.08) translateY(${y*0.15}px)`;
   }
+},{passive:true});
+
+// ── SCROLL REVEAL ──
+const ioOpts = {threshold:0.12};
+const io = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.classList.add('visible');
+      // trigger draw-line children
+      e.target.querySelectorAll('.draw-line').forEach(dl=>dl.classList.add('visible'));
+      io.unobserve(e.target);
+    }
+  });
+},ioOpts);
+document.querySelectorAll('.reveal,.reveal-left,.reveal-right,.stagger').forEach(el=>io.observe(el));
+
+// ── ANIMATED COUNTERS ──
+function animateCounter(el){
+  const target = parseInt(el.dataset.target);
+  const prefix = el.dataset.prefix||'';
+  const suffix = el.dataset.suffix||'';
+  if(target===0){el.textContent=prefix+'0'+suffix;return;}
+  let start=0, duration=1800, startTime=null;
+  function step(ts){
+    if(!startTime) startTime=ts;
+    const progress=Math.min((ts-startTime)/duration,1);
+    const eased=1-Math.pow(1-progress,3);
+    start=Math.round(eased*target);
+    el.textContent=prefix+start+suffix;
+    if(progress<1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+const counterIO = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      document.querySelectorAll('.stat-val[data-target]').forEach(animateCounter);
+      counterIO.disconnect();
+    }
+  });
+},{threshold:0.5});
+const statsEl = document.querySelector('.hero-stats');
+if(statsEl) counterIO.observe(statsEl);
+
+// ── PORTFOLIO FILTER ──
+function filterProjects(type,btn){
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const cards = document.querySelectorAll('.project-card');
+  cards.forEach((card,i)=>{
+    const show = type==='all' || card.dataset.type===type;
+    if(show){
+      card.style.display='';
+      card.style.opacity='0'; card.style.transform='translateY(20px)';
+      setTimeout(()=>{
+        card.style.transition='opacity 0.4s,transform 0.4s';
+        card.style.opacity='1'; card.style.transform='';
+      },i*40);
+    } else {
+      card.style.opacity='0'; card.style.transform='translateY(10px)';
+      setTimeout(()=>{ card.style.display='none'; },300);
+    }
+  });
+}
 </script>
 </body>
 </html>
