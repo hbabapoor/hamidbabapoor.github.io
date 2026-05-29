@@ -264,11 +264,28 @@ h2 em{font-style:italic;color:var(--gold);}
   transform:translateY(0);transition:transform 0.4s cubic-bezier(.25,.46,.45,.94),box-shadow 0.4s;
 }
 .project-card:hover{transform:translateY(-8px);box-shadow:0 24px 60px rgba(0,0,0,0.4);}
-.project-card img{
-  width:100%;aspect-ratio:4/3;object-fit:cover;opacity:0.75;display:block;
-  transition:opacity 0.5s,transform 0.6s cubic-bezier(.25,.46,.45,.94);
-}
+.project-card img{width:100%;aspect-ratio:4/3;object-fit:cover;opacity:0.75;display:block;transition:opacity 0.5s,transform 0.6s cubic-bezier(.25,.46,.45,.94);}
 .project-card:hover img{opacity:0.45;transform:scale(1.06);}
+.project-card:hover .lazy-img.loaded{opacity:0.45;transform:scale(1.06);}
+.lazy-img{transform:scale(1);transition:opacity 0.5s ease,transform 0.6s cubic-bezier(.25,.46,.45,.94);}
+/* ── LAZY IMAGE LOADING ── */
+.img-wrap { position:relative; width:100%; aspect-ratio:4/3; overflow:hidden; background:#1a1a1a; }
+.img-skeleton {
+  position:absolute; inset:0;
+  background: linear-gradient(90deg, #1a1a1a 25%, #2a2520 50%, #1a1a1a 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.6s infinite;
+}
+@keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+.lazy-img {
+  position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
+  opacity:0; transition:opacity 0.5s ease;
+}
+.lazy-img.loaded { opacity:0.75; }
+.project-card:hover .lazy-img.loaded { opacity:0.45; }
+.lazy-img.loaded + .img-skeleton,
+.img-skeleton:has(+ .lazy-img.loaded) { display:none; }
+
 .project-overlay{
   position:absolute;bottom:0;left:0;right:0;
   background:linear-gradient(transparent,rgba(0,0,0,0.88));
@@ -542,65 +559,65 @@ footer strong{color:rgba(255,255,255,0.8);}
   <div class="portfolio-grid stagger" id="portfolio-grid">
     <div class="project-card" data-type="duplex">
       <div class="project-always">Joint Venture</div>
-      <img src="https://turyn.com.au/images/project-01-cover.jpg" alt="16 & 18 MacKillop Drive Morisset" loading="lazy"/>
+      <div class="img-wrap"><div class="img-skeleton"></div><img data-src="https://turyn.com.au/images/project-01-cover.jpg" alt="16 & 18 MacKillop Drive Morisset" class="lazy-img"/></div>
       <div class="project-overlay"><div class="project-tag">Duplex · Joint Venture</div><div class="project-name">16 &amp; 18 MacKillop Drive</div><div class="project-loc">Morisset, NSW · Both sold within 3 weeks</div></div>
     </div>
     <div class="project-card" data-type="freestanding">
-      <img src="https://turyn.com.au/images/project-02-cover.jpg" alt="7 McMillan Circuit Kellyville" loading="lazy"/>
+      <div class="img-wrap"><div class="img-skeleton"></div><img data-src="https://turyn.com.au/images/project-02-cover.jpg" alt="7 McMillan Circuit Kellyville" class="lazy-img"/></div>
       <div class="project-overlay"><div class="project-tag">Freestanding · Luxury</div><div class="project-name">7 McMillan Circuit</div><div class="project-loc">Kellyville, NSW · Double-storey with pool</div></div>
     </div>
     <div class="project-card" data-type="freestanding">
-      <img src="https://turyn.com.au/images/project-03-cover.jpg" alt="2 Wood Bridge Palace Bella Vista" loading="lazy"/>
+      <div class="img-wrap"><div class="img-skeleton"></div><img data-src="https://turyn.com.au/images/project-03-cover.jpg" alt="2 Wood Bridge Palace Bella Vista" class="lazy-img"/></div>
       <div class="project-overlay"><div class="project-tag">Freestanding · Luxury</div><div class="project-name">2 Wood Bridge Palace</div><div class="project-loc">Bella Vista, NSW · Corner-block, gym &amp; pool</div></div>
     </div>
     <div class="project-card" data-type="freestanding">
       <div class="project-always">TURYN Dev</div>
-      <img src="https://turyn.com.au/images/project-4-cover.jpg" alt="7 Carrawinya Crescent North Kellyville" loading="lazy"/>
+      <div class="img-wrap"><div class="img-skeleton"></div><img data-src="https://turyn.com.au/images/project-4-cover.jpg" alt="7 Carrawinya Crescent North Kellyville" class="lazy-img"/></div>
       <div class="project-overlay"><div class="project-tag">TURYN Development · Three-Storey</div><div class="project-name">7 Carrawinya Crescent</div><div class="project-loc">North Kellyville · Tennis court &amp; pool</div></div>
     </div>
     <div class="project-card" data-type="freestanding">
       <div class="project-always">NDIS Specialist</div>
-      <img src="https://turyn.com.au/images/project-5-cover.PNG" alt="48 Wood Street Lane Cove West" loading="lazy"/>
+      <div class="img-wrap"><div class="img-skeleton"></div><img data-src="https://turyn.com.au/images/project-5-cover.PNG" alt="48 Wood Street Lane Cove West" class="lazy-img"/></div>
       <div class="project-overlay"><div class="project-tag">Specialist NDIS · Three-Storey</div><div class="project-name">48 Wood Street</div><div class="project-loc">Lane Cove West · Lift, pool, full NDIS compliance</div></div>
     </div>
     <div class="project-card" data-type="freestanding">
-      <img src="https://turyn.com.au/images/project-6-cover.jpg" alt="9 Carrawinya Crescent North Kellyville" loading="lazy"/>
+      <div class="img-wrap"><div class="img-skeleton"></div><img data-src="https://turyn.com.au/images/project-6-cover.jpg" alt="9 Carrawinya Crescent North Kellyville" class="lazy-img"/></div>
       <div class="project-overlay"><div class="project-tag">Freestanding · High-End</div><div class="project-name">9 Carrawinya Crescent</div><div class="project-loc">North Kellyville · Pool &amp; private gymnasium</div></div>
     </div>
     <div class="project-card" data-type="kdrb">
-      <img src="https://turyn.com.au/images/project-07-cover.jpg" alt="27 Sirius Street Dundas" loading="lazy"/>
+      <div class="img-wrap"><div class="img-skeleton"></div><img data-src="https://turyn.com.au/images/project-07-cover.jpg" alt="27 Sirius Street Dundas" class="lazy-img"/></div>
       <div class="project-overlay"><div class="project-tag">Knockdown Rebuild · French Provincial</div><div class="project-name">27 Sirius Street</div><div class="project-loc">Dundas, NSW · Swimming pool, landscaped garden</div></div>
     </div>
     <div class="project-card" data-type="kdrb">
-      <img src="https://turyn.com.au/images/project-08-1.jpg" alt="26 Wellman Road Forestville" loading="lazy"/>
+      <div class="img-wrap"><div class="img-skeleton"></div><img data-src="https://turyn.com.au/images/project-08-1.jpg" alt="26 Wellman Road Forestville" class="lazy-img"/></div>
       <div class="project-overlay"><div class="project-tag">Knockdown Rebuild · Hampton Style</div><div class="project-name">26 Wellman Road</div><div class="project-loc">Forestville, NSW · Weatherboard &amp; pool</div></div>
     </div>
     <div class="project-card" data-type="extension">
-      <img src="https://turyn.com.au/images/project-9-cover.jpg" alt="62 Grace Avenue Frenchs Forest" loading="lazy"/>
+      <div class="img-wrap"><div class="img-skeleton"></div><img data-src="https://turyn.com.au/images/project-9-cover.jpg" alt="62 Grace Avenue Frenchs Forest" class="lazy-img"/></div>
       <div class="project-overlay"><div class="project-tag">Extension &amp; Renovation · High-End</div><div class="project-name">62 Grace Avenue</div><div class="project-loc">Frenchs Forest, NSW · Full structural renovation</div></div>
     </div>
     <div class="project-card" data-type="extension">
-      <img src="https://turyn.com.au/images/project-10-cover.jpg" alt="43 Macintosh Road Dee Why" loading="lazy"/>
+      <div class="img-wrap"><div class="img-skeleton"></div><img data-src="https://turyn.com.au/images/project-10-cover.jpg" alt="43 Macintosh Road Dee Why" class="lazy-img"/></div>
       <div class="project-overlay"><div class="project-tag">Extension · Double-Storey + Granny Flat</div><div class="project-name">43 Macintosh Road</div><div class="project-loc">Dee Why, NSW · Pool, spa &amp; granny flat</div></div>
     </div>
     <div class="project-card" data-type="freestanding">
-      <img src="https://turyn.com.au/images/project-11-cover.JPG" alt="4 Gammel Street Rydalmere" loading="lazy"/>
+      <div class="img-wrap"><div class="img-skeleton"></div><img data-src="https://turyn.com.au/images/project-11-cover.JPG" alt="4 Gammel Street Rydalmere" class="lazy-img"/></div>
       <div class="project-overlay"><div class="project-tag">Freestanding · Double-Storey</div><div class="project-name">4 Gammel Street</div><div class="project-loc">Rydalmere, NSW · Pool, open-plan living</div></div>
     </div>
     <div class="project-card" data-type="extension">
-      <img src="https://turyn.com.au/images/project-12-cover.jpg" alt="69 Parsonage Road Castle Hill" loading="lazy"/>
+      <div class="img-wrap"><div class="img-skeleton"></div><img data-src="https://turyn.com.au/images/project-12-cover.jpg" alt="69 Parsonage Road Castle Hill" class="lazy-img"/></div>
       <div class="project-overlay"><div class="project-tag">Extension &amp; Renovation · High-End</div><div class="project-name">69 Parsonage Road</div><div class="project-loc">Castle Hill, NSW · Structural reconfiguration</div></div>
     </div>
     <div class="project-card" data-type="kdrb">
-      <img src="https://turyn.com.au/images/project-13-cover.jpg" alt="1 Kastelan St Blacktown" loading="lazy"/>
+      <div class="img-wrap"><div class="img-skeleton"></div><img data-src="https://turyn.com.au/images/project-13-cover.jpg" alt="1 Kastelan St Blacktown" class="lazy-img"/></div>
       <div class="project-overlay"><div class="project-tag">Knockdown Rebuild · Dual-Occupancy</div><div class="project-name">1 Kastelan St / 4 Melony St</div><div class="project-loc">Blacktown, NSW · Corner block, 2 homes</div></div>
     </div>
     <div class="project-card" data-type="freestanding">
-      <img src="https://turyn.com.au/images/project-14-cover.jpg" alt="103 Rosedale Circuit Carnes Hill" loading="lazy"/>
+      <div class="img-wrap"><div class="img-skeleton"></div><img data-src="https://turyn.com.au/images/project-14-cover.jpg" alt="103 Rosedale Circuit Carnes Hill" class="lazy-img"/></div>
       <div class="project-overlay"><div class="project-tag">Freestanding · Double-Storey</div><div class="project-name">103 Rosedale Circuit</div><div class="project-loc">Carnes Hill, NSW · Pool, 4+ bedrooms</div></div>
     </div>
     <div class="project-card" data-type="kdrb">
-      <img src="https://turyn.com.au/images/project-02-cover.jpg" alt="80 Nirranda Street Concord West" loading="lazy"/>
+      <div class="img-wrap"><div class="img-skeleton"></div><img data-src="https://turyn.com.au/images/project-02-cover.jpg" alt="80 Nirranda Street Concord West" class="lazy-img"/></div>
       <div class="project-overlay"><div class="project-tag">Knockdown Rebuild · High-End</div><div class="project-name">80 Nirranda Street</div><div class="project-loc">Concord West, NSW · Pool &amp; freestanding cabana</div></div>
     </div>
   </div>
@@ -653,6 +670,25 @@ footer strong{color:rgba(255,255,255,0.8);}
 </footer>
 
 <script>
+
+// ── TRUE LAZY IMAGE LOADER ──
+const lazyIO = new IntersectionObserver((entries, obs) => {
+  entries.forEach(e => {
+    if (!e.isIntersecting) return;
+    const img = e.target;
+    img.src = img.dataset.src;
+    img.onload = () => {
+      img.classList.add('loaded');
+      // hide skeleton
+      const sk = img.previousElementSibling;
+      if (sk && sk.classList.contains('img-skeleton')) sk.style.display='none';
+    };
+    obs.unobserve(img);
+  });
+}, { rootMargin: '200px 0px' }); // load 200px before entering view
+
+document.querySelectorAll('.lazy-img').forEach(img => lazyIO.observe(img));
+
 // ── CUSTOM CURSOR ──
 const cursor = document.getElementById('cursor');
 const ring   = document.getElementById('cursorRing');
